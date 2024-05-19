@@ -15,10 +15,12 @@ while True:
         continue
     break
 
-IV = get_random_bytes(16)
-output_files = [filename[:-4]+"_ECB.jpg", filename[:-4]+"_CBC.jpg", filename[:-4]+"_CFB.jpg"]
-# Image load and prelim processing
+IV = get_random_bytes(16) # Generate an IV for CBC and CFB
+output_files = [filename[:-4]+"_ECB.jpg", filename[:-4]+"_CBC.jpg", filename[:-4]+"_CFB.jpg"] # Create list of new filenames for different encryptions
+
+# Try...except to catch any error caused by user input, like wrong file name
 try:
+    # Image load and prelim processing
     im = Image.open(filename)
     im_bytes = bytes(im.tobytes())
     imageSize = im.size
@@ -40,9 +42,10 @@ try:
     output = cipher.encrypt(pad(im_bytes,128))
     im_out = Image.frombytes("RGB",imageSize,output)
     im_out.save(output_files[2])
-except Exception as e:
+except Exception as e: # Catch error
+    # Inform user there was an error, sleep program so user can see, and then close program
     print("There was an error with the input, program is closing.")
     sleep(2)
     sys.exit()
-
-print("Your image has been encrypted using ECB, CBC, and CFB. You can find them with the same name and the encryption type added.")
+# If there is no exception at all, inform user encryption is done
+print("Your image has been encrypted using ECB, CBC, and CFB. You can find them with the same name and the encryption type appended to the name.")
